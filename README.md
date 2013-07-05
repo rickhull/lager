@@ -75,21 +75,19 @@ Use block invocation of message methods
     # rather than
     debug "hi"
 
-    # by using the first form, the block will not be evaluated unless we
+    # By using the first form, the block will not be evaluated unless we
     # are logging at DEBUG level.
-    # if using the second form, the message is evaluated no matter the current
+    # If using the second form, the message is evaluated no matter the current
     # log level.
 
-Aftifacts
+Artifacts
 ---------
-By mixing in Lager via extend, you introduce these class methods:
-* lager
-* log_to
-* log_level
-
-By calling log_to, you introduce the class instance variable @lager
-
-By assigning @lager within initialize, you introduce the instance variable @lager
+* By mixing in Lager via extend, you introduce these class methods:
+  * lager
+  * log_to
+  * log_level
+* By calling log_to, you introduce the class instance variable @lager
+* By assigning @lager within initialize, you introduce the instance variable @lager
 
 Now you have a unified interface for logging at both class and instance layers:
 
