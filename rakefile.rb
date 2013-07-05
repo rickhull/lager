@@ -31,12 +31,12 @@ task :build => [:bump_build] do
   spec = Gem::Specification.new do |s|
     # Static assignments
     s.name        = PROJECT_NAME
-    s.summary     = "FIX"
-    s.description = "FIX"
-    s.authors     = ["FIX"]
-    s.email       = "FIX@FIX.COM"
-    s.homepage    = "http://FIX.COM/"
-    s.licenses    = ['FIX']
+    s.summary     = "Sane class-level logging"
+    s.description = "Should you use it? Yes."
+    s.authors     = ["Rick Hull"]
+    s.email       = "rick@cloudscaling.com"
+    s.homepage    = "http://github.com/rickhull/lager"
+    s.licenses    = ['LGPL']
 
     # Dynamic assignments
     s.files       = manifest
