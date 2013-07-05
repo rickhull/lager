@@ -83,6 +83,7 @@ module Lager
   # typically only used within initialize
   #
   def lager
-    @lager || log_to
+    log_to unless defined?(@lager)
+    @lager
   end
 end
