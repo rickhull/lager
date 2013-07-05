@@ -68,7 +68,16 @@ Best practices
 * Set the instance layer's @lager within #initialize
 * Only call message methods (debug, info, warn, error, fatal) on @lager in your class and instance methods.
 * Beyond the class default, let the log destination and log level be managed from the outside, by the users of your class.
-* Use block invocation of message methods (debug { "hi" } rather than debug "hi")
+* Use block invocation of message methods
+
+    debug { "hi" }
+    # rather than
+    debug "hi"
+
+    # by using the first form, the block will not be evaluated unless we
+    # are logging at DEBUG level.
+    # if using the second form, the message is evaluated no matter the current
+    # log level.
 
 Aftifacts
 ---------
