@@ -29,12 +29,37 @@ What about instance methods, you ask?  Well, you will need to assign @lager your
       def initialize
         # set the instance layer's @lager to the class layer's @lager
         @lager = self.class.lager
-	# now both layers are using the same instance
+        # now both layers are using the same instance
       end
 
       def do_something_complicated
         @lager.debug { "about to do something complicated" }
-	# ...
+        # ...
         @lager.debug { "whew! we made it!" }
       end
     end
+
+Everything under control
+------------------------
+Right now, Foo is spewing debug messages everywhere:
+
+    Foo.bar(15)
+    f = Foo.new
+    f.do_something_complicated
+
+This is because we set the default logging to :debug level, above:
+
+    class Foo
+      extend Lager
+      log_to $stdout, :debug  # sets up @lager at the class layer
+
+Now let's calm things down:
+
+    Foo.log_level :warn
+    Foo.new.do_something_complicated
+
+We can tell Foo to log to a file:
+
+    Foo.log_to '/tmp/foo.log'
+
+Note that this will create a new Logger instance.  The old log level will be maintained unless you specify a new one.
