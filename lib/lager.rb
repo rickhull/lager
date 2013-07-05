@@ -16,7 +16,7 @@ module Lager
 #
 # Foo.lager
 #
-  def lager dest=nil
+  def new_lager dest=nil
     case dest
     when nil, 'stderr', 'STDERR'
       dest = $stderr
@@ -29,27 +29,24 @@ module Lager
     else
       raise "unable to log_to #{dest} (#{dest.class})"
     end
-    if defined?(@@lager)
-      l = Logger.new dest
-      l.formatter = @@lager.formatter
-      l.level = @@lager.level
-      @@lager = l
-    else
-      @@lager = Logger.new dest
-      @@lager.formatter = proc { |sev, time, progname, msg|
-        line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{sev.to_s.upcase}: "
-        line << "(#{progname}) " if progname
-        line << msg << "\n"
-      }
-      @@lager.level = Logger::WARN
-    end
-    @@lager
+    @lager = Logger.new dest
+    @lager.formatter = proc { |sev, time, progname, msg|
+      line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{sev.to_s.upcase}: "
+      line << "(#{progname}) " if progname
+      line << msg << "\n"
+    }
+    @lager.level = Logger::WARN
+    @lager
+  end
+
+  def lager
+    @lager or new_lager
   end
 
   def log_level=(sym)
-    log_to unless defined?(@@lager)
+    log_to unless defined?(@lager)
     level = Logger.const_get(sym.to_s.upcase)
     raise "unknown log level #{sym}" unless level
-    @@lager.level = level
+    @lager.level = level
   end
 end
