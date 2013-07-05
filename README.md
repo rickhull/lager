@@ -89,6 +89,6 @@ Artifacts
 * By calling log_to, you introduce the class instance variable @lager
 * By assigning @lager within initialize, you introduce the instance variable @lager
 
-Now you have a unified interface for logging at both class and instance layers:
+Now you have a unified interface for logging at both class and instance layers.
 
     @lager.info { "So happy right now!" }
