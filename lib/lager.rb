@@ -44,9 +44,8 @@ module Lager
   end
 
   def log_level=(sym)
-    log_to unless defined?(@lager)
     level = Logger.const_get(sym.to_s.upcase)
     raise "unknown log level #{sym}" unless level
-    @lager.level = level
+    self.lager.level = level
   end
 end
