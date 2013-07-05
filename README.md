@@ -45,6 +45,11 @@ Right now, Foo is spewing debug messages everywhere:
     f = Foo.new
     f.do_something_complicated
 
+    [2013-07-05 15:14:52] DEBUG: baz 15 is a Fixnum, not a string
+    [2013-07-05 15:14:52] DEBUG: about to do something complicated
+    [2013-07-05 15:14:52] DEBUG: whew! we made it!
+
+
 This is because we set the default logging to :debug level, above:
 
     class Foo
