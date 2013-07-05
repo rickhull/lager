@@ -72,9 +72,7 @@ Best practices
 
 Aftifacts
 ---------
-By mixing in Lager via extend, you introduce the following into your class
-
-Class methods
+By mixing in Lager via extend, you introduce these class methods:
 * lager
 * log_to
 * log_level
@@ -83,6 +81,6 @@ By calling log_to, you introduce the class instance variable @lager
 
 By assigning @lager within initialize, you introduce the instance variable @lager
 
-Now you have a unified interface for logging at both class and instance layers, e.g.
+Now you have a unified interface for logging at both class and instance layers:
 
     @lager.info { "So happy right now!" }
