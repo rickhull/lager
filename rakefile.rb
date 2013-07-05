@@ -1,4 +1,9 @@
 require 'rubygems/package_task'
+require 'rake/testtask'
+
+Rake::TestTask.new :test do |t|
+  t.pattern = 'test/*.rb'
+end
 
 PROJECT_ROOT = File.dirname(__FILE__)
 PROJECT_NAME = File.split(PROJECT_ROOT).last
@@ -13,7 +18,7 @@ task :version do
   puts "#{PROJECT_NAME} #{version}"
 end
 
-task :tag do
+task :tag => [:test] do
   tagname = "v#{version}"
   sh "git tag -a #{tagname} -m 'auto-tagged #{tagname} by Rake'"
   sh "git push origin --tags"
@@ -27,7 +32,7 @@ task :manifest do
   puts manifest.join("\n")
 end
 
-task :build => [:bump_build] do
+task :build => [:test, :bump_build] do
   spec = Gem::Specification.new do |s|
     # Static assignments
     s.name        = PROJECT_NAME
