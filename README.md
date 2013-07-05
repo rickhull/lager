@@ -2,8 +2,6 @@ Lager
 =====
 Lager is a logging mixin.  It is designed to add class methods for logging, via extend.  It aims to provide a unified logging interface that you can use in both class and instance methods.  Only one Logger instance is used for this.  You are able to set the log destination and log level from within the class, via instantiation, or from outside.
 
-Best practice is to set default logging inside the class definition, set the instance layer's @lager within #initialize, and then only call message methods (debug, info, warn, error, fatal) on @lager in your class and instance methods.  Let the log destination and log level be managed from the outside, by the users of your class.
-
 Usage
 -----
     require 'lager'
@@ -63,3 +61,28 @@ We can tell Foo to log to a file:
     Foo.log_to '/tmp/foo.log'
 
 Note that this will create a new Logger instance.  The old log level will be maintained unless you specify a new one.
+
+Best practices
+--------------
+* Set default logging inside the class definition by calling log_to
+* Set the instance layer's @lager within #initialize
+* Only call message methods (debug, info, warn, error, fatal) on @lager in your class and instance methods.
+* Beyond the class default, let the log destination and log level be managed from the outside, by the users of your class.
+* Use block invocation of message methods (debug { "hi" } rather than debug "hi")
+
+Aftifacts
+---------
+By mixing in Lager via extend, you introduce the following into your class
+
+Class methods
+* lager
+* log_to
+* log_level
+
+By calling log_to, you introduce the class instance variable @lager
+
+By assigning @lager within initialize, you introduce the instance variable @lager
+
+Now you have a unified interface for logging at both class and instance layers, e.g.
+
+    @lager.info { "So happy right now!" }
