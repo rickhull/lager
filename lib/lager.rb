@@ -44,7 +44,9 @@ module Lager
   # (passed straight through to Logger.new)
   # supports symbols, strings, and integers for log level
   #
-  def log_to(dest = $stderr, level = :warn)
+  def log_to(dest = $stderr, level = nil)
+    # use the old @lager's level by default, as appropriate
+    level ||= (defined?(@lager) ? @lager.level : :warn)
     @lager = Logger.new dest
     @lager.formatter = proc { |sev, time, progname, msg|
       line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{sev.to_s.upcase}: "
