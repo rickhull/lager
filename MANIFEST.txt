@@ -1,0 +1,4 @@
+MANIFEST.txt
+VERSION
+README.md
+rakefile.rb
