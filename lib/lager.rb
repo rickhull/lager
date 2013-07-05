@@ -1,7 +1,17 @@
 require 'logger'
 
 module Lager
-  def self.log_to dest=nil
+  def self.version
+    vpath = File.join(File.dirname(__FILE__), '..', 'VERSION')
+    File.read(vpath).chomp
+  end
+
+
+# this module is meant to be mixed in at a class level
+# e.g.
+# extend Lager
+#
+  def log_to dest=nil
     case dest
     when nil, 'stderr', 'STDERR'
       dest = $stderr
@@ -31,7 +41,7 @@ module Lager
     @@log
   end
 
-  def self.log_level=(sym)
+  def log_level=(sym)
     log_to unless defined?(@@log)
     level = Logger.const_get(sym.to_s.upcase)
     raise "unknown log level #{sym}" unless level
