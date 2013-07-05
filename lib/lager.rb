@@ -4,36 +4,33 @@ require 'logger'
 # e.g.
 # class Foo
 #   extend Lager
+#   log_to '/tmp/foo.log'
 #   ...
 # end
 #
-# It provides the class variable @@lager, which may be used in class or
-# instance methods.
+# It provides the class instance variable @lager, which may be used in class methods
 #
-# e.g. @@lager.debug { "example log message" }
+# e.g. @lager.debug { "example log message" }
 #
 # Note that using the block invocation means that the block contents are
 # not evaluated if the log level is above the message level.
 #
-# The tricky part to using @@lager is making sure that it's already been
-# defined.  In an instance context, this is fairly easy.  Make sure to call
-# self.class.fresh_lager, presumably with a log destination.  If you want
-# to set or change the log destination, call fresh_lager.
+# Make sure to call log_to within the class definition, so that class methods
+# will already have @lager defined.
+
+# For instance methods, you need to set @lager directly, within initialize
+# Note: the instance layer and class layer each have their own independent
+#       @lager
+# Here we will make the instance @lager reference the class @lager
 #
-# In a class context, you are probably not setting the log destination.
-# Rather than calling fresh_lager, which will set the log destination to
-# $stderr by default, you should call ensure_lager.  If @@lager already exists,
-# then you won't overwrite it.
+# def initialize
+#   @lager = self.class.lager
+# end
 #
-# Usage:
+# Outside of initialize or a call to log_to within the class definition,
+# you should only ever call the message methods: debug, info, warn, error,
+# and fatal within your class code.
 #
-# Guard any calls to @@lager in class methods with ensure_lager at the top of
-# the method
-#
-# Guard any calls to @@lager in instance methods with fresh_lager in initialize
-#
-# After setting the default log level in initialize, only ever call the
-# message methods: debug, info, warn, error, fatal within your class code.
 # Let the destination and log level be managed from outside.
 #
 module Lager
@@ -42,46 +39,48 @@ module Lager
     File.read(vpath).chomp
   end
 
-  def ensure_lager
-    fresh_lager unless defined? @@lager
-  end
-
-  def fresh_lager(dest = nil, level = :warn)
-    case dest
-    when nil, 'stderr', 'STDERR'
-      dest = $stderr
-    when 'stdout', 'STDOUT'
-      dest = $stdout
-    when IO
-      # do nothing
-    when String
-      # assume file path, do nothing
-    else
-      raise "unable to log_to #{dest} (#{dest.class})"
-    end
-    @@lager = Logger.new dest
-    @@lager.formatter = proc { |sev, time, progname, msg|
+  # create @lager
+  # supports IO and String (filename, presumably) for log destination
+  # (passed straight through to Logger.new)
+  # supports symbols, strings, and integers for log level
+  #
+  def log_to(dest = $stderr, level = :warn)
+    @lager = Logger.new dest
+    @lager.formatter = proc { |sev, time, progname, msg|
       line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{sev.to_s.upcase}: "
       line << "(#{progname}) " if progname
       line << msg << "\n"
     }
-    log_level = level
-    nil # don't expose @@lager outside of the class mixing this in
+    log_level level
+    nil # don't expose @lager here
   end
 
-  def log_level= sym
-    ensure_lager
-    case sym
+  # call without argument to get the log level
+  # call with argument to set the log level
+  # :debug, 'debug', and Logger::DEBUG (0) are all supported
+  #
+  def log_level(level = nil)
+    raise "no @lager available" unless defined?(@lager)
+    case level
+    when nil
+      @lager.level
     when Symbol, String
       begin
-        @@lager.level = Logger.const_get(sym.to_s.upcase)
+        @lager.level = Logger.const_get(level.to_s.upcase)
       rescue NameError
-        raise "unknown log level #{sym}"
+        raise "unknown log level #{level}"
       end
     when Numeric
-      @@lager.level = sym
+      @lager.level = level
     else
-      raise "unknown log level: #{sym}"
+      raise "unknown log level: #{level}"
     end
+  end
+
+  # provide access to the class instance variable
+  # typically only used within initialize
+  #
+  def lager
+    @lager || log_to
   end
 end
