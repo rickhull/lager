@@ -9,9 +9,14 @@ module Lager
 
 # this module is meant to be mixed in at a class level
 # e.g.
-# extend Lager
+# class Foo
+#   extend Lager
+#   ...
+# end
 #
-  def log_to dest=nil
+# Foo.lager
+#
+  def lager dest=nil
     case dest
     when nil, 'stderr', 'STDERR'
       dest = $stderr
@@ -24,27 +29,27 @@ module Lager
     else
       raise "unable to log_to #{dest} (#{dest.class})"
     end
-    if defined?(@@log)
+    if defined?(@@lager)
       l = Logger.new dest
-      l.formatter = @@log.formatter
-      l.level = @@log.level
-      @@log = l
+      l.formatter = @@lager.formatter
+      l.level = @@lager.level
+      @@lager = l
     else
-      @@log = Logger.new dest
-      @@log.formatter = proc { |sev, time, progname, msg|
+      @@lager = Logger.new dest
+      @@lager.formatter = proc { |sev, time, progname, msg|
         line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{sev.to_s.upcase}: "
         line << "(#{progname}) " if progname
         line << msg << "\n"
       }
-      @@log.level = Logger::WARN
+      @@lager.level = Logger::WARN
     end
-    @@log
+    @@lager
   end
 
   def log_level=(sym)
-    log_to unless defined?(@@log)
+    log_to unless defined?(@@lager)
     level = Logger.const_get(sym.to_s.upcase)
     raise "unknown log level #{sym}" unless level
-    @@log.level = level
+    @@lager.level = level
   end
 end
