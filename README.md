@@ -1,6 +1,6 @@
 Lager
 =====
-Lager is a logging mixin.  It is designed to add class methods for logging, via extend.  It aims to provide a unified logging interface that you can use in both class and instance methods.  It is implemented with the familiar [Logger class](http://ruby-doc.org/stdlib-2.0/libdoc/logger/rdoc/Logger.html) from ruby's [stdlib](http://ruby-doc.org/stdlib/).  Only one Logger instance is used for this.  You are able to set the log destination and log level from within the class, via instantiation, or from outside.
+Lager is a logging mixin.  It is designed to add class methods for logging, via `extend Lager`.  It provides a unified logging instance that you can use in both class and instance methods.  It is implemented with the familiar [Logger class](http://ruby-doc.org/stdlib-2.0/libdoc/logger/rdoc/Logger.html) from ruby's [stdlib](http://ruby-doc.org/stdlib/).  Only one Logger instance is used for the class.  Use #log_to to set the log destination and log level from inside or outside the class.
 
 Usage
 -----
@@ -65,7 +65,7 @@ We can tell Foo to log to a file:
 
     Foo.log_to '/tmp/foo.log'
 
-Note that this will create a new Logger instance.  The old log level will be maintained unless you specify a new one.
+Note that this will replace the class's Logger instance.  The old log level will be maintained unless you specify a new one.
 
 Best practices
 --------------
