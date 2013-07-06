@@ -56,7 +56,7 @@ This is because we set the default logging to :debug level, above:
       extend Lager
       log_to $stdout, :debug  # sets up @lager at the class layer
 
-Now let's calm things down:
+Let's calm things down a bit, shall we?
 
     Foo.log_level :warn
     Foo.new.do_something_complicated
