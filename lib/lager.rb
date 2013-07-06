@@ -8,16 +8,19 @@ require 'logger'
 #   ...
 # end
 #
-# It provides the class instance variable @lager, which may be used in class methods
+# It provides the class instance variable @lager, which may be used in class
+# methods, e.g.
 #
-# e.g. @lager.debug { "example log message" }
+# def self.foo
+#   @lager.debug { "example log message" }
+# end
 #
 # Note that using the block invocation means that the block contents are
 # not evaluated if the log level is above the message level.
 #
 # Make sure to call log_to within the class definition, so that class methods
-# will already have @lager defined.
-
+# will already have @lager defined at requiretime.
+#
 # For instance methods, you need to set @lager directly, within initialize
 # Note: the instance layer and class layer each have their own independent
 #       @lager
