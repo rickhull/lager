@@ -1,6 +1,8 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 
+require 'tempfile'
+
 require_relative '../lib/lager'
 require_relative '../examples/foo' # useful Foo class
 
@@ -10,24 +12,57 @@ describe Lager do
       Lager.version.must_match %r{\A[0-9\.]+\z}
     end
   end
+
   describe "#log_to" do
-    # note, the useful Foo class has already called log_to in the class def
     it "must have created a Logger" do
+      # note, the useful Foo class has already called log_to in the class def
       Foo.lager.must_be_instance_of(Logger)
     end
 
     it "must return nil" do
       Foo.log_to.must_be_nil
     end
+
+    it "must use an existing Logger when provided" do
+      l = Logger.new($stderr)
+      Foo.log_to l
+      Foo.lager.must_equal l
+      Foo.log_level :info
+      Foo.bar # does debug logging, should be silent
+      Foo.lager.must_equal l
+    end
+
+    it "must handle a Tempfile when provided" do
+      t = Tempfile.new('lager')
+      Foo.log_to t
+      Foo.log_level :debug
+      Foo.bar # does debug logging
+      t.rewind
+      t.read.wont_be_empty
+      t.close
+      t.unlink
+    end
+
+    it "must handle a path to /tmp when provided" do
+      fname = '/tmp/lager.log'
+      Foo.log_to fname
+      Foo.log_level :debug
+      Foo.bar # does debug logging
+      Foo.log_to $stderr
+      File.exists?(fname).must_equal true
+      File.unlink fname
+    end
   end
 
   describe "#log_level" do
-    it "must accept :debug without raising" do
+    it "must accept :debug as Logger::DEBUG" do
       Foo.log_level :debug
+      Foo.log_level.must_equal Logger::DEBUG
     end
 
-    it "must accept 1 without raising" do
-      Foo.log_level 1
+    it "must accept Logger::INFO as Logger::INFO" do
+      Foo.log_level Logger::INFO
+      Foo.log_level.must_equal Logger::INFO
     end
   end
 end
