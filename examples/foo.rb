@@ -11,16 +11,12 @@ class Foo
     @lager.debug { "inside Foo.bar" }
   end
 
-  def initialize(log_dest = nil)
-    # Optional: set logging via instantiation
-    #     Note: for the whole class
-    #
-    self.class.log_to(log_dest) if log_dest
-
-    # always make sure to assign @lager at the instance layer
+  def initialize
+    # assign @lager at the instance layer if you want to use it
+    # @lager, here, is technically a different variable than used above
+    # though we are setting them to the same thing
     #
     @lager = self.class.lager
-
     @lager.debug { "inside Foo#initialize" }
   end
 end
@@ -28,11 +24,11 @@ end
 if __FILE__ == $0
   Foo.bar
   Foo.new
-  Foo.new $stderr
 
   # set logging from outside
   #
-  Foo.log_to $stdout
+  puts "Turning on debug logging"
+  Foo.log_to $stderr
   Foo.log_level :debug
 
   Foo.bar
