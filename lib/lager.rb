@@ -40,11 +40,16 @@ module Lager
   end
 
   # create @lager
+  # if passed a Logger instance, set @lager to that instance and return
   # supports IO and String (filename, presumably) for log destination
   # (passed straight through to Logger.new)
   # supports symbols, strings, and integers for log level
   #
   def log_to(dest = $stderr, level = nil)
+    if dest.is_a?(Logger)
+      @lager = dest
+      return
+    end
     # use the old @lager's level by default, as appropriate
     level ||= (defined?(@lager) ? @lager.level : :warn)
     @lager = Logger.new dest

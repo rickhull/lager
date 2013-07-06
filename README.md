@@ -97,3 +97,26 @@ Artifacts
 Now you have a unified interface for logging at both class and instance layers.
 
     @lager.info { "So happy right now!" }
+
+Use an existing Logger instance
+-------------------------------
+If your project already has an existing Logger, then you can set your class to use that Logger:
+
+    class Foo
+      extend Lager
+      log_to $LOG # the global Logger instance
+      # ...
+    end
+
+Of course, $LOG will have to have already been defined at requiretime.  You can set it the same way at runtime:
+
+    class Foo
+      extend Lager
+      log_to $stderr
+      # ...
+    end
+
+    # now, in an irb session or another file
+    # where Project.log is your project's Logger:
+
+    Foo.log_to Project.log
