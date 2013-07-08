@@ -1,3 +1,4 @@
+lager.gemspec
 MANIFEST.txt
 VERSION
 README.md
