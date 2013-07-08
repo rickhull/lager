@@ -38,8 +38,8 @@ require 'logger'
 #
 module Lager
   def self.version
-    vpath = File.join(File.dirname(__FILE__), '..', 'VERSION')
-    File.read(vpath).chomp
+    file = File.expand_path('../../VERSION', __FILE__)
+    File.read(file).chomp
   end
 
   # create @lager
