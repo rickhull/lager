@@ -42,17 +42,14 @@ module Lager
     File.read(file).chomp
   end
 
-  # create @lager
+  # create @lager from dest; return dest
   # if passed a Logger instance, set @lager to that instance and return
   # supports IO and String (filename, presumably) for log destination
   # (passed straight through to Logger.new)
   # supports symbols, strings, and integers for log level
   #
-  def log_to(dest = $stderr, level = nil)
-    if dest.is_a?(Logger)
-      @lager = dest
-      return
-    end
+  def log_to(dest, level = nil)
+    return (@lager = dest) if dest.is_a?(Logger)
     # use the old @lager's level by default, as appropriate
     level ||= (defined?(@lager) ? @lager.level : :warn)
     @lager = Logger.new dest
@@ -62,7 +59,7 @@ module Lager
       line << msg << "\n"
     }
     log_level level
-    nil # don't expose @lager here
+    dest # don't expose @lager here
   end
 
   # call without argument to get the log level
@@ -71,19 +68,27 @@ module Lager
   #
   def log_level(level = nil)
     raise "no @lager available" unless defined?(@lager)
+    return (self.log_level = level) if level
+    [:debug, :info, :warn, :error, :fatal][@lager.level] || :unknown
+  end
+
+  def log_level=(level)
+    raise "no @lager available" unless defined?(@lager)
     case level
-    when nil
-      @lager.level
     when Symbol, String
       begin
         @lager.level = Logger.const_get(level.to_s.upcase)
       rescue NameError
-        raise "unknown log level #{level}"
+        @lager.unknown "unknown log level: #{level}"
       end
     when Numeric
-      @lager.level = level
+      if level < Logger::UNKNOWN
+        @lager.level = level
+      else
+        @lager.unknown "unknown log level: #{level}"
+      end
     else
-      raise "unknown log level: #{level}"
+      @lager.unknown "unknown log level: #{level} (#{level.class})"
     end
   end
 
