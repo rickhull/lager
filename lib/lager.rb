@@ -67,12 +67,8 @@ module Lager
   # call with argument to set the log level
   # :debug, 'debug', and Logger::DEBUG (0) are all supported
   #
-  def log_level(level = nil)
+  def log_level
     raise "no @lager available" unless defined?(@lager)
-    if level
-      @lager.warn { "passing an argument to log_level is deprecated" }
-      return self.log_level = level
-    end
     [:debug, :info, :warn, :error, :fatal][@lager.level] || :unknown
   end
 
