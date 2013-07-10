@@ -31,7 +31,7 @@ describe Lager do
       l = Logger.new($stderr)
       Foo.log_to l
       Foo.lager.must_equal l
-      Foo.log_level :info
+      Foo.log_level = :info
       Foo.bar # does debug logging, should be silent
       Foo.lager.must_equal l
     end
@@ -39,7 +39,7 @@ describe Lager do
     it "must handle a Tempfile when provided" do
       t = Tempfile.new('lager')
       Foo.log_to t
-      Foo.log_level :debug
+      Foo.log_level = :debug
       Foo.bar # does debug logging
       t.rewind
       t.read.wont_be_empty
@@ -50,7 +50,7 @@ describe Lager do
     it "must handle a path to /tmp when provided" do
       fname = '/tmp/lager.log'
       Foo.log_to fname
-      Foo.log_level :debug
+      Foo.log_level = :debug
       Foo.bar # does debug logging
       Foo.log_to $stderr
       File.exists?(fname).must_equal true

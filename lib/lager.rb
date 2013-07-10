@@ -54,11 +54,12 @@ module Lager
     level ||= (defined?(@lager) ? @lager.level : :warn)
     @lager = Logger.new dest
     @lager.formatter = proc { |sev, time, progname, msg|
-      line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}] #{sev.to_s.upcase}: "
-      line << "(#{progname}) " if progname
-      line << msg << "\n"
+      line = "[#{time.strftime('%Y-%m-%d %H:%M:%S')}]"
+      line << sev.to_s.upcase.rjust(5) << ":"
+      line << "(#{progname})" if progname
+      line << " #{msg}\n"
     }
-    log_level level
+    log_level = level
     dest # don't expose @lager here
   end
 
@@ -68,7 +69,10 @@ module Lager
   #
   def log_level(level = nil)
     raise "no @lager available" unless defined?(@lager)
-    return (self.log_level = level) if level
+    if level
+      @lager.warn { "passing an argument to log_level is deprecated" }
+      return self.log_level = level
+    end
     [:debug, :info, :warn, :error, :fatal][@lager.level] || :unknown
   end
 
