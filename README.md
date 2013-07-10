@@ -58,7 +58,7 @@ This is because we set the default logging to :debug level, above:
 
 Let's calm things down a bit, shall we?
 
-    Foo.log_level :warn
+    Foo.log_level = :warn
     Foo.new.do_something_complicated
 
 We can tell Foo to log to a file:
@@ -91,8 +91,9 @@ Artifacts
   * lager
   * log_to
   * log_level
-* By calling log_to, you introduce the class instance variable @lager
-* By assigning @lager within initialize, you introduce the instance variable @lager
+  * log_level=
+* By calling log_to, you introduce the *class instance variable* @lager
+* By assigning @lager within initialize, you introduce the *instance variable* @lager
 
 Now you have a unified interface for logging at both class and instance layers.
 
