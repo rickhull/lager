@@ -4,66 +4,71 @@ Lager is a logging mixin.  It is designed to add class methods for logging, via 
 
 Usage
 -----
-    require 'lager'
+```ruby
+require 'lager'
 
-    class Foo
-      extend Lager
-      log_to $stdout, :debug  # sets up @lager at the class layer
-      # ...
+class Foo
+  extend Lager
+  log_to $stdout, :debug  # sets up @lager at the class layer
+  # ...
+```
 
 Now, within Foo, you can use the class instance variable @lager for logging.
 
-      # ...
-      def self.bar(baz)
-        unless baz.is_a?(String)
-          @lager.debug { "baz #{baz} is a #{baz.class}, not a string" }
-        end
-      end
-      # ...
+```ruby
+  # ...
+  def self.bar(baz)
+    unless baz.is_a?(String)
+      @lager.debug { "baz #{baz} is a #{baz.class}, not a string" }
+    end
+  end
+  # ...
+```
 
 What about instance methods, you ask?  Well, you will need to assign @lager yourself, within #initialize.
 
-      # ...
-      def initialize
-        # set the instance layer's @lager to the class layer's @lager
-        @lager = self.class.lager
-        # now both layers are using the same instance
-      end
+```ruby
+  # ...
+  def initialize
+    # set the instance layer's @lager to the class layer's @lager
+    @lager = self.class.lager
+    # now both layers are using the same instance
+  end
 
-      def do_something_complicated
-        @lager.debug { "about to do something complicated" }
-        # ...
-        @lager.debug { "whew! we made it!" }
-      end
-    end
+  def do_something_complicated
+    @lager.debug { "about to do something complicated" }
+    # ...
+    @lager.debug { "whew! we made it!" }
+  end
+end
+```
 
 Everything under control
 ------------------------
 Right now, Foo is spewing debug messages everywhere:
 
-    Foo.bar(15)
-    f = Foo.new
-    f.do_something_complicated
+```ruby
+Foo.bar(15)
+f = Foo.new
+f.do_something_complicated
 
-    [2013-07-05 15:14:52] DEBUG: baz 15 is a Fixnum, not a string
-    [2013-07-05 15:14:52] DEBUG: about to do something complicated
-    [2013-07-05 15:14:52] DEBUG: whew! we made it!
+[2013-07-05 15:14:52] DEBUG: baz 15 is a Fixnum, not a string
+[2013-07-05 15:14:52] DEBUG: about to do something complicated
+[2013-07-05 15:14:52] DEBUG: whew! we made it!
+```
 
+This is because we set the default logging to :debug level, above.  Let's calm things down a bit, shall we?
 
-This is because we set the default logging to :debug level, above:
-
-    class Foo
-      extend Lager
-      log_to $stdout, :debug  # sets up @lager at the class layer
-
-Let's calm things down a bit, shall we?
-
-    Foo.log_level = :warn
-    Foo.new.do_something_complicated
+```ruby
+Foo.log_level = :warn
+Foo.new.do_something_complicated
+```
 
 We can tell Foo to log to a file:
 
-    Foo.log_to '/tmp/foo.log'
+```ruby
+Foo.log_to '/tmp/foo.log'
+```
 
 Note that this will replace the class's Logger instance.  The old log level will be maintained unless you specify a new one.
 
@@ -76,14 +81,16 @@ Best practices
 
 For Logger, generally: use block invocation of message methods.
 
-    @lager.debug { "hi" }
-    # rather than
-    @lager.debug "hi"
+```ruby
+@lager.debug { "hi" }
+# rather than
+@lager.debug "hi"
 
-    # By using the first form, the block will not be evaluated unless we
-    # are logging at DEBUG level.
-    # If using the second form, the message is evaluated no matter the current
-    # log level.  This can be significant when logging complicated messages.
+# By using the first form, the block will not be evaluated unless we
+# are logging at DEBUG level.
+# If using the second form, the message is evaluated no matter the current
+# log level.  This can be significant when logging complicated messages.
+```
 
 Artifacts
 ---------
@@ -97,27 +104,49 @@ Artifacts
 
 Now you have a unified interface for logging at both class and instance layers.
 
-    @lager.info { "So happy right now!" }
+```ruby
+  @lager.info { "So happy right now!" }
+```
 
 Use an existing Logger instance
 -------------------------------
 If your project already has an existing Logger, then you can set your class to use that Logger:
 
-    class Foo
-      extend Lager
-      log_to $LOG # the global Logger instance
-      # ...
-    end
+```ruby
+class Foo
+  extend Lager
+  log_to $LOG # the global Logger instance
+  # ...
+end
+```
 
 Of course, $LOG will have to have already been defined at requiretime.  You can set it the same way at runtime:
 
-    class Foo
-      extend Lager
-      log_to $stderr
-      # ...
-    end
+```ruby
+class Foo
+  extend Lager
+  log_to $stderr
+  # ...
+end
 
-    # now, in an irb session or another file
-    # where Project.log is your project's Logger:
+# now, in an irb session or another file
+# where Project.log is your project's Logger:
 
-    Foo.log_to Project.log
+Foo.log_to Project.log
+```
+
+Inheritance
+-----------
+```ruby
+class Foo
+  extend Lager
+end
+
+class Bar < Foo
+end
+
+# Bar will have Lager mixed in.  Its @lager is independent of Foo's.
+# You can set Bar's to Foo's
+
+Bar.log_to Foo.lager
+```
