@@ -15,9 +15,6 @@ require 'logger'
 #   @lager.debug { "example log message" }
 # end
 #
-# Note that using the block invocation means that the block contents are
-# not evaluated if the log level is above the message level.
-#
 # Make sure to call log_to within the class definition, so that class methods
 # will already have @lager defined at requiretime.
 #
@@ -29,12 +26,6 @@ require 'logger'
 # def initialize
 #   @lager = self.class.lager
 # end
-#
-# Outside of initialize or a call to log_to within the class definition,
-# you should only ever call the message methods: debug, info, warn, error,
-# and fatal within your class code.
-#
-# Let the destination and log level be managed from outside.
 #
 module Lager
   def self.version
