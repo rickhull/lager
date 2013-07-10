@@ -4,7 +4,11 @@ require 'minitest/autorun'
 require 'tempfile'
 
 require_relative '../lib/lager'
-require_relative '../examples/foo' # useful Foo class
+
+# useful Foo class
+# calls log_to at require time
+#
+require_relative '../examples/foo'
 
 describe Lager do
   describe ".version" do
@@ -15,12 +19,12 @@ describe Lager do
 
   describe "#log_to" do
     it "must have created a Logger" do
-      # note, the useful Foo class has already called log_to in the class def
+      # note, the useful Foo class has already called log_to
       Foo.lager.must_be_instance_of(Logger)
     end
 
     it "must return nil" do
-      Foo.log_to.must_be_nil
+      Foo.log_to($stdout).must_equal $stdout
     end
 
     it "must use an existing Logger when provided" do
@@ -54,15 +58,46 @@ describe Lager do
     end
   end
 
-  describe "#log_level" do
-    it "must accept :debug as Logger::DEBUG" do
-      Foo.log_level :debug
-      Foo.log_level.must_equal Logger::DEBUG
+  describe "#log_level=" do
+    before do
+      Foo.log_level = :fatal
     end
 
-    it "must accept Logger::INFO as Logger::INFO" do
-      Foo.log_level Logger::INFO
-      Foo.log_level.must_equal Logger::INFO
+    it "must accept :debug as :debug" do
+      Foo.log_level = :debug
+      Foo.log_level.must_equal :debug
+    end
+
+    it "must accept Logger::INFO as :info" do
+      Foo.log_level = Logger::INFO
+      Foo.log_level.must_equal :info
+    end
+
+    it "must accept 'warn' as :warn" do
+      Foo.log_level = 'warn'
+      Foo.log_level.must_equal :warn
+    end
+
+    def must_ignore level
+      lev = Foo.log_level
+      Foo.log_level = level
+      Foo.log_level.must_equal lev
+    end
+
+    it "must ignore a bad symbol" do
+      must_ignore :bedug
+    end
+
+    it "must ignore an unexpected object" do
+      must_ignore Array
+    end
+
+    it "must ignore a bad integer" do
+      must_ignore 42
+    end
+
+    it "must ignore Logger::UNKNOWN" do
+      must_ignore Logger::UNKNOWN
     end
   end
 end
