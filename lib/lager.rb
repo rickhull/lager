@@ -50,7 +50,7 @@ module Lager
       line << "(#{progname})" if progname
       line << " #{msg}\n"
     }
-    log_level = level
+    self.log_level = level
     dest # don't expose @lager here
   end
 
