@@ -54,15 +54,15 @@ module Lager
     dest # don't expose @lager here
   end
 
-  # call without argument to get the log level
-  # call with argument to set the log level
-  # :debug, 'debug', and Logger::DEBUG (0) are all supported
+  # returns a symbol e.g. :debug -- possibly :unknown
   #
   def log_level
     raise "no @lager available" unless defined?(@lager)
     [:debug, :info, :warn, :error, :fatal][@lager.level] || :unknown
   end
 
+  # :debug, 'debug', and Logger::DEBUG (0) are all supported
+  #
   def log_level=(level)
     raise "no @lager available" unless defined?(@lager)
     case level
