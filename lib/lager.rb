@@ -87,7 +87,7 @@ module Lager
   # typically only used within initialize
   #
   def lager
-    log_to unless defined?(@lager)
+    raise "no @lager available" unless defined?(@lager)
     @lager
   end
 end
