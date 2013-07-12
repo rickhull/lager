@@ -85,12 +85,9 @@ For Logger, generally: use block invocation of message methods.
 @lager.debug { "hi" }
 # rather than
 @lager.debug "hi"
-
-# By using the first form, the block will not be evaluated unless we
-# are logging at DEBUG level.
-# If using the second form, the message is evaluated no matter the current
-# log level.  This can be significant when logging complicated messages.
 ```
+
+By using the first form, the block will not be evaluated unless you are logging at DEBUG level.  If using the second form, the message is evaluated no matter the current log level.  This can be significant when logging heavily processed  messages.
 
 Artifacts
 ---------
