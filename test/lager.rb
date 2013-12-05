@@ -23,7 +23,7 @@ describe Lager do
       Foo.lager.must_be_instance_of(Logger)
     end
 
-    it "must return nil" do
+    it "must return its argument" do
       Foo.log_to($stdout).must_equal $stdout
     end
 
