@@ -7,6 +7,9 @@ Buildar.new do |b|
   b.use_git           = true
 end
 
+task default: %w[test]
+
+desc "Run tests"
 Rake::TestTask.new :test do |t|
   t.pattern = 'test/*.rb'
 end
