@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/rickhull/lager.svg?branch=master)](https://travis-ci.org/rickhull/lager)
+[![Gem Version](https://badge.fury.io/rb/lager.svg)](http://badge.fury.io/rb/lager)
+[![Dependency Status](https://gemnasium.com/rickhull/lager.svg)](https://gemnasium.com/rickhull/lager)
+[![Security Status](https://hakiri.io/github/rickhull/lager/master.svg)](https://hakiri.io/github/rickhull/lager/master/shield)
+
 Lager
 =====
 Lager is a logging mixin.  It is designed to add class methods for logging, via `extend Lager`.  It provides a unified logging instance that you can use in both class and instance methods.  It is implemented with the familiar [Logger class](http://ruby-doc.org/stdlib-2.0/libdoc/logger/rdoc/Logger.html) from ruby's [stdlib](http://ruby-doc.org/stdlib/).  Only one Logger instance is used for the class.  Use #log_to to set the log destination and log level from inside or outside the class.
