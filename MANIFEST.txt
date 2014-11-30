@@ -1,9 +1,0 @@
-lager.gemspec
-MANIFEST.txt
-VERSION
-README.md
-rakefile.rb
-lib/lager.rb
-test/lager.rb
-examples/foo.rb
-examples/usage.rb
