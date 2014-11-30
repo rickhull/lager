@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/rickhull/lager.svg?branch=master)](https://travis-ci.org/rickhull/lager)
 [![Gem Version](https://badge.fury.io/rb/lager.svg)](http://badge.fury.io/rb/lager)
 [![Dependency Status](https://gemnasium.com/rickhull/lager.svg)](https://gemnasium.com/rickhull/lager)
-[![Code Climate](https://codeclimate.org/github/rickhull/lager/badges/gpa.svg)](https://codeclimate.com/github/rickhull/lager/badges)
+[![Code Climate](https://codeclimate.com/github/rickhull/lager/badges/gpa.svg)](https://codeclimate.com/github/rickhull/lager/badges)
 [![Security Status](https://hakiri.io/github/rickhull/lager/master.svg)](https://hakiri.io/github/rickhull/lager/master/shield)
 
 Lager
