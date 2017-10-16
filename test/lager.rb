@@ -78,7 +78,9 @@ describe Lager do
 
     def must_ignore level
       lev = Foo.log_level
-      Foo.log_level = level
+      capture_subprocess_io do # suppress warnings
+        Foo.log_level = level
+      end
       Foo.log_level.must_equal lev
     end
 
