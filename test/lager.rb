@@ -1,9 +1,7 @@
-require 'minitest/spec'
 require 'minitest/autorun'
-
 require 'tempfile'
 
-require_relative '../lib/lager'
+require 'lager'
 
 # useful Foo class
 # calls log_to at require time
@@ -53,7 +51,7 @@ describe Lager do
       Foo.log_level = :debug
       Foo.bar # does debug logging
       Foo.log_to $stderr
-      File.exists?(fname).must_equal true
+      File.exist?(fname).must_equal true
       File.unlink fname
     end
   end
