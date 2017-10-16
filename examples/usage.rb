@@ -1,4 +1,4 @@
-require_relative '../lib/lager'
+require 'lager'
 
 class Foo
   extend Lager
