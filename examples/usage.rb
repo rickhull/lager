@@ -30,7 +30,7 @@ if __FILE__ == $0
   f.do_something_complicated
 
   puts "Now updating Foo's log level"
-  Foo.log_level :warn
+  Foo.log_level = :warn
   Foo.new.do_something_complicated
 
   puts "Now the same calls as before"
