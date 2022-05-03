@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.has_rdoc    = true
   s.description = "Should you use it? Yes."
 
-  s.add_development_dependency "minitest", ["~> 1"]
-  s.add_development_dependency  "buildar", ["~> 1"]
+  s.add_development_dependency "minitest", ["> 1"]
+  s.add_development_dependency  "buildar", ["> 1"]
 
   # dynamic setup
   this_dir = File.expand_path('..', __FILE__)
