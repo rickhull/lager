@@ -1,28 +1,17 @@
 Gem::Specification.new do |s|
   s.name        = 'lager'
   s.summary     = "Sane class-level logging"
+  s.description = "Should you use it? Yes."
   s.author      = "Rick Hull"
   s.homepage    = "http://github.com/rickhull/lager"
-  s.license     = 'LGPL'
-  s.has_rdoc    = true
-  s.description = "Should you use it? Yes."
+  s.license     = 'LGPL-3.0'
 
-  s.add_development_dependency "minitest", ["> 1"]
-  s.add_development_dependency  "buildar", ["> 1"]
+  s.required_ruby_version = '> 2'
 
-  # dynamic setup
-  this_dir = File.expand_path('..', __FILE__)
-  version_file = File.join(this_dir, 'VERSION')
+  s.version  = File.read(File.join(__dir__, 'VERSION')).chomp
 
   # dynamic assignments
-  s.version  = File.read(version_file).chomp
-  s.files = %w[lager.gemspec
-               VERSION
-               README.md
-               Rakefile
-               lib/lager.rb
-               test/lager.rb
-               examples/foo.rb
-               examples/usage.rb
-            ]
+  s.files  = %w[lager.gemspec VERSION README.md Rakefile]
+  s.files += Dir['lib/**/*.rb']
+  s.files += Dir['test/**/*.rb']
 end
